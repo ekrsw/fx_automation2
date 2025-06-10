@@ -12,6 +12,16 @@ python main.py
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### Environment Setup
+```bash
+# Copy environment template and configure
+cp .env.example .env
+# Edit .env with your MT5 demo account credentials
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
 ### Database Operations
 ```bash
 # Apply migrations
@@ -20,6 +30,14 @@ alembic upgrade head
 alembic revision --autogenerate -m "description"
 # Check migration status
 alembic current
+```
+
+### MT5 Connection Setup
+```bash
+# Test MT5 demo connection setup
+python scripts/setup_mt5_demo.py
+# Test MT5 connection functionality
+python scripts/test_mt5_connection.py
 ```
 
 ### Testing
@@ -102,17 +120,31 @@ This is a **sophisticated FX automated trading system** implementing **Dow Theor
 - `app/db/` - SQLAlchemy models optimized for time-series data with proper indexing
 - `app/services/` - Business logic layer handling data processing and signal generation
 
-**REST API System (Phase 7.1 Complete):**
-- `app/api/` - Comprehensive REST API with 21 endpoints for complete system control
+**REST API + WebSocket + UI System (Phase 7 Complete):**
+- `app/api/` - Comprehensive REST API with 25+ endpoints for complete system control
   - `dashboard.py` - 7 dashboard endpoints (status, performance, positions, trades, orders, risk, market data)
   - `trading.py` - 8 trading control endpoints (session management, signal processing, order/position management, emergency controls)
   - `analysis.py` - 5 analysis endpoints (Dow Theory, Elliott Wave, unified analysis, signal generation, multi-timeframe)
   - `settings.py` - 1 settings management endpoint (configuration, export, dynamic updates)
+  - `mt5_control.py` - 4 MT5 control endpoints (connect, disconnect, status, health check)
+  - `dashboard_ui.py` - UI routing for real-time dashboard
+  - `websockets.py` - WebSocket server with 7 subscription types and real-time data streaming
+
+**Real-time Web Interface:**
+- `frontend/templates/dashboard.html` - Complete real-time trading dashboard with Bootstrap 5 + Chart.js
+- `frontend/static/js/dashboard.js` - WebSocket client with auto-reconnection and real-time updates
+- `frontend/static/css/dashboard.css` - Responsive dashboard styling
+
+**WebSocket Real-time System:**
+- Real-time price streaming, signal distribution, trading event notifications
+- 7 subscription types: market_data, signals, trading_events, system_status, positions, orders, risk_alerts
+- Connection management with automatic reconnection and client tracking
 
 **Data & Infrastructure:**
-- `app/mt5/` - MetaTrader 5 integration for live data and trade execution
+- `app/mt5/` - MetaTrader 5 integration with demo account connection (XMTrading-MT5 3)
 - `app/db/` - SQLAlchemy models optimized for time-series data with proper indexing
 - `app/services/` - Business logic layer handling data processing and signal generation
+- `app/integrations/websocket_integration.py` - WebSocket integration layer for trading system notifications
 
 ### Key Architectural Patterns
 
@@ -188,32 +220,39 @@ Comprehensive test coverage with specialized test suites for each analysis engin
 
 ### Development Status
 
-**Phase 7.1 Complete (2025-06-10)** - Complete trading system with comprehensive REST API:
+**Phase 7 Complete (2025-06-10)** - Complete real-time trading system with UI and MT5 integration:
 
 **Completed Phases:**
 - **Phase 1-5:** Complete strategy engine with Dow Theory and Elliott Wave analysis
 - **Phase 6:** Complete trading execution system implementation and testing
-- **Phase 7.1:** Comprehensive REST API implementation
+- **Phase 7:** Complete API + WebSocket + UI + MT5 integration
 
-**Phase 7.1 REST API Implementation:**
-- **21 REST Endpoints:** Complete API coverage for all system functionality
-- **Dashboard API:** Real-time system monitoring, performance metrics, position tracking
-- **Trading Control API:** Session management, signal processing, order/position control, emergency stops
-- **Analysis API:** Direct access to Dow Theory, Elliott Wave, unified analysis, and signal generation
-- **Settings API:** Dynamic configuration management with export/import capabilities
-- **Technical Features:** FastAPI + Pydantic, async/await, comprehensive error handling, auto-generated documentation
-- **Integration Testing:** All APIs integrated with trading system components
+**Phase 7 Full Implementation:**
+- **Phase 7.1:** 25+ REST Endpoints with complete API coverage
+- **Phase 7.2:** WebSocket real-time streaming with 7 subscription types
+- **Phase 7.3:** Complete real-time dashboard with Bootstrap 5 + Chart.js
+- **MT5 Integration:** Demo account connection established (XMTrading-MT5 3, $10,000 balance)
+- **Technical Stack:** FastAPI + WebSocket + Bootstrap5 + Chart.js + MT5 integration
+- **Real-time Features:** Live price charts, position tracking, trading controls, system monitoring
 
-**Ready for Phase 7.2:** WebSocket implementation for real-time data streaming.
+**Current Status:** Fully integrated real-time trading system operational at `http://localhost:8000`
 
 ## Important Configuration
 
 System settings are managed through `app/config.py` with environment variable support. Trading parameters, risk management settings, and analysis parameters are all configurable without code changes.
 
-The development server runs on `http://localhost:8000` with comprehensive REST API access:
-- Interactive API documentation: `/docs`
-- System dashboard: `/` (with links to all API endpoints)
-- Health check: `/health`
+The complete system runs on `http://localhost:8000` with comprehensive access:
+- **Real-time Dashboard:** `/ui/dashboard` - Complete trading interface with live charts and controls
+- **Interactive API Documentation:** `/docs` - Auto-generated Swagger UI
+- **Root Landing Page:** `/` - System overview with auto-redirect to dashboard
+- **Health Check:** `/health` - System health status
+- **WebSocket Connection:** `ws://localhost:8000/ws` - Real-time data streaming
+
+**Key URLs:**
+- Dashboard: `http://localhost:8000/ui/dashboard`
+- API Docs: `http://localhost:8000/docs`
+- System Status: `http://localhost:8000/api/dashboard/status`
+- MT5 Status: `http://localhost:8000/api/mt5/status`
 
 ## Complete Trading System Usage
 
@@ -255,6 +294,9 @@ success = await trading_engine.process_signal(signal)
 # Get system status
 curl http://localhost:8000/api/dashboard/status
 
+# Connect to MT5
+curl -X POST http://localhost:8000/api/mt5/connect
+
 # Start trading session
 curl -X POST http://localhost:8000/api/trading/session/start \
   -H "Content-Type: application/json" \
@@ -271,3 +313,30 @@ curl -X PUT http://localhost:8000/api/settings/trading \
   -H "Content-Type: application/json" \
   -d '{"max_positions": 10, "risk_per_trade": 0.02}'
 ```
+
+### WebSocket Usage (JavaScript)
+```javascript
+// Connect to WebSocket
+const ws = new WebSocket('ws://localhost:8000/ws');
+
+// Subscribe to market data
+ws.send(JSON.stringify({
+    action: 'subscribe',
+    subscription_type: 'market_data',
+    symbols: ['EURUSD', 'USDJPY']
+}));
+
+// Handle real-time updates
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Real-time update:', data);
+};
+```
+
+### Real-time Dashboard Access
+Navigate to `http://localhost:8000/ui/dashboard` for the complete real-time trading interface with:
+- Live price charts with Chart.js
+- MT5 connection controls
+- Trading session management
+- Real-time position monitoring
+- WebSocket-powered live updates
