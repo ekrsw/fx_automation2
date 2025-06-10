@@ -57,13 +57,33 @@ async def get_dow_theory_analysis(
         data_fetcher = get_data_fetcher()
         
         # Get price data
+        # Calculate date range from periods
+        end_date = datetime.now()
+        # Approximate periods to days (conservative estimate)
+        if timeframe == "M1":
+            days_back = periods // (24 * 60) + 1
+        elif timeframe == "M5":
+            days_back = periods // (24 * 12) + 1
+        elif timeframe == "M15":
+            days_back = periods // (24 * 4) + 1
+        elif timeframe == "H1":
+            days_back = periods // 24 + 1
+        elif timeframe == "H4":
+            days_back = periods // 6 + 1
+        elif timeframe == "D1":
+            days_back = periods + 1
+        else:
+            days_back = periods + 1  # Default fallback
+        start_date = end_date - timedelta(days=days_back)
+        
         price_data = await data_fetcher.get_historical_data(
             symbol=symbol,
             timeframe=timeframe,
-            count=periods
+            start_date=start_date,
+            end_date=end_date
         )
         
-        if not price_data or len(price_data) == 0:
+        if price_data is None or price_data.empty:
             raise HTTPException(
                 status_code=404,
                 detail=f"No price data available for {symbol} {timeframe}"
@@ -146,13 +166,33 @@ async def get_elliott_wave_analysis(
         data_fetcher = get_data_fetcher()
         
         # Get price data
+        # Calculate date range from periods
+        end_date = datetime.now()
+        # Approximate periods to days (conservative estimate)
+        if timeframe == "M1":
+            days_back = periods // (24 * 60) + 1
+        elif timeframe == "M5":
+            days_back = periods // (24 * 12) + 1
+        elif timeframe == "M15":
+            days_back = periods // (24 * 4) + 1
+        elif timeframe == "H1":
+            days_back = periods // 24 + 1
+        elif timeframe == "H4":
+            days_back = periods // 6 + 1
+        elif timeframe == "D1":
+            days_back = periods + 1
+        else:
+            days_back = periods + 1  # Default fallback
+        start_date = end_date - timedelta(days=days_back)
+        
         price_data = await data_fetcher.get_historical_data(
             symbol=symbol,
             timeframe=timeframe,
-            count=periods
+            start_date=start_date,
+            end_date=end_date
         )
         
-        if not price_data or len(price_data) == 0:
+        if price_data is None or price_data.empty:
             raise HTTPException(
                 status_code=404,
                 detail=f"No price data available for {symbol} {timeframe}"
@@ -276,13 +316,33 @@ async def get_unified_analysis(
         data_fetcher = get_data_fetcher()
         
         # Get price data
+        # Calculate date range from periods
+        end_date = datetime.now()
+        # Approximate periods to days (conservative estimate)
+        if timeframe == "M1":
+            days_back = periods // (24 * 60) + 1
+        elif timeframe == "M5":
+            days_back = periods // (24 * 12) + 1
+        elif timeframe == "M15":
+            days_back = periods // (24 * 4) + 1
+        elif timeframe == "H1":
+            days_back = periods // 24 + 1
+        elif timeframe == "H4":
+            days_back = periods // 6 + 1
+        elif timeframe == "D1":
+            days_back = periods + 1
+        else:
+            days_back = periods + 1  # Default fallback
+        start_date = end_date - timedelta(days=days_back)
+        
         price_data = await data_fetcher.get_historical_data(
             symbol=symbol,
             timeframe=timeframe,
-            count=periods
+            start_date=start_date,
+            end_date=end_date
         )
         
-        if not price_data or len(price_data) == 0:
+        if price_data is None or price_data.empty:
             raise HTTPException(
                 status_code=404,
                 detail=f"No price data available for {symbol} {timeframe}"
@@ -365,12 +425,32 @@ async def get_multi_timeframe_analysis(request: MultiTimeframeAnalysisRequest) -
         timeframe_data = {}
         for tf in request.timeframes:
             try:
+                # Calculate date range from periods
+                end_date = datetime.now()
+                # Approximate periods to days (conservative estimate)
+                if tf == "M1":
+                    days_back = request.periods // (24 * 60) + 1
+                elif tf == "M5":
+                    days_back = request.periods // (24 * 12) + 1
+                elif tf == "M15":
+                    days_back = request.periods // (24 * 4) + 1
+                elif tf == "H1":
+                    days_back = request.periods // 24 + 1
+                elif tf == "H4":
+                    days_back = request.periods // 6 + 1
+                elif tf == "D1":
+                    days_back = request.periods + 1
+                else:
+                    days_back = request.periods + 1  # Default fallback
+                start_date = end_date - timedelta(days=days_back)
+                
                 price_data = await data_fetcher.get_historical_data(
                     symbol=request.symbol,
                     timeframe=tf,
-                    count=request.periods
+                    start_date=start_date,
+                    end_date=end_date
                 )
-                if price_data and len(price_data) > 0:
+                if price_data is not None and not price_data.empty:
                     timeframe_data[tf] = price_data
             except Exception as e:
                 analysis_logger.warning(f"Failed to get data for {request.symbol} {tf}: {e}")
@@ -458,13 +538,33 @@ async def generate_signal(
         data_fetcher = get_data_fetcher()
         
         # Get price data
+        # Calculate date range from periods
+        end_date = datetime.now()
+        # Approximate periods to days (conservative estimate)
+        if timeframe == "M1":
+            days_back = periods // (24 * 60) + 1
+        elif timeframe == "M5":
+            days_back = periods // (24 * 12) + 1
+        elif timeframe == "M15":
+            days_back = periods // (24 * 4) + 1
+        elif timeframe == "H1":
+            days_back = periods // 24 + 1
+        elif timeframe == "H4":
+            days_back = periods // 6 + 1
+        elif timeframe == "D1":
+            days_back = periods + 1
+        else:
+            days_back = periods + 1  # Default fallback
+        start_date = end_date - timedelta(days=days_back)
+        
         price_data = await data_fetcher.get_historical_data(
             symbol=symbol,
             timeframe=timeframe,
-            count=periods
+            start_date=start_date,
+            end_date=end_date
         )
         
-        if not price_data or len(price_data) == 0:
+        if price_data is None or price_data.empty:
             raise HTTPException(
                 status_code=404,
                 detail=f"No price data available for {symbol} {timeframe}"

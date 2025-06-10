@@ -16,6 +16,18 @@ from app.analysis.elliott_wave import (
 from app.analysis.indicators.swing_detector import SwingPoint, SwingType
 
 
+def create_swing_point(index, price, swing_type):
+    """Helper function to create SwingPoint with proper parameters"""
+    from datetime import datetime
+    import pandas as pd
+    return SwingPoint(
+        index=index,
+        timestamp=pd.Timestamp(datetime.now()),
+        price=price,
+        swing_type=swing_type
+    )
+
+
 class CurrencyPairTestData:
     """Generate test data for different currency pairs"""
     
@@ -33,7 +45,7 @@ class CurrencyPairTestData:
             (1.1500, SwingType.LOW),     # Correction
         ]
         
-        return [SwingPoint(i * 20, price, swing_type) 
+        return [create_swing_point(i * 20, price, swing_type) 
                 for i, (price, swing_type) in enumerate(base_data)]
     
     @staticmethod
@@ -50,7 +62,7 @@ class CurrencyPairTestData:
             (120.00, SwingType.LOW),     # Correction
         ]
         
-        return [SwingPoint(i * 25, price, swing_type) 
+        return [create_swing_point(i * 25, price, swing_type) 
                 for i, (price, swing_type) in enumerate(base_data)]
     
     @staticmethod
@@ -67,7 +79,7 @@ class CurrencyPairTestData:
             (165.00, SwingType.LOW),     # Correction
         ]
         
-        return [SwingPoint(i * 30, price, swing_type) 
+        return [create_swing_point(i * 30, price, swing_type) 
                 for i, (price, swing_type) in enumerate(base_data)]
     
     @staticmethod
@@ -84,7 +96,7 @@ class CurrencyPairTestData:
             (2080.00, SwingType.LOW),    # Correction
         ]
         
-        return [SwingPoint(i * 15, price, swing_type) 
+        return [create_swing_point(i * 15, price, swing_type) 
                 for i, (price, swing_type) in enumerate(base_data)]
 
 
@@ -370,20 +382,20 @@ class TestMultiCurrencyElliottWave:
         # Simulate different market sessions with different characteristics
         # Asian session: typically quieter, smaller ranges
         asian_data = [
-            SwingPoint(0, 1.0500, SwingType.LOW),
-            SwingPoint(20, 1.0520, SwingType.HIGH),   # Small 20 pip move
-            SwingPoint(40, 1.0510, SwingType.LOW),    # Small retracement
-            SwingPoint(60, 1.0535, SwingType.HIGH),   # Small extension
-            SwingPoint(80, 1.0515, SwingType.LOW),    # Consolidation
+            create_swing_point(0, 1.0500, SwingType.LOW),
+            create_swing_point(20, 1.0520, SwingType.HIGH),   # Small 20 pip move
+            create_swing_point(40, 1.0510, SwingType.LOW),    # Small retracement
+            create_swing_point(60, 1.0535, SwingType.HIGH),   # Small extension
+            create_swing_point(80, 1.0515, SwingType.LOW),    # Consolidation
         ]
         
         # London/NY session: typically more volatile, larger ranges
         london_ny_data = [
-            SwingPoint(0, 1.0500, SwingType.LOW),
-            SwingPoint(20, 1.0650, SwingType.HIGH),   # Large 150 pip move
-            SwingPoint(40, 1.0558, SwingType.LOW),    # 61.8% retracement
-            SwingPoint(60, 1.0793, SwingType.HIGH),   # 161.8% extension
-            SwingPoint(80, 1.0680, SwingType.LOW),    # Significant retracement
+            create_swing_point(0, 1.0500, SwingType.LOW),
+            create_swing_point(20, 1.0650, SwingType.HIGH),   # Large 150 pip move
+            create_swing_point(40, 1.0558, SwingType.LOW),    # 61.8% retracement
+            create_swing_point(60, 1.0793, SwingType.HIGH),   # 161.8% extension
+            create_swing_point(80, 1.0680, SwingType.LOW),    # Significant retracement
         ]
         
         # Analyze both session types
@@ -511,16 +523,16 @@ class TestRealTimeMultiCurrencyScenarios:
         
         usd_strength_scenario = {
             'EURUSD': [  # EUR/USD falling (USD strength)
-                SwingPoint(0, 1.1000, SwingType.HIGH),
-                SwingPoint(20, 1.0500, SwingType.LOW),
-                SwingPoint(40, 1.0691, SwingType.HIGH),  # 38.2% retracement
-                SwingPoint(60, 1.0191, SwingType.LOW),   # Extension
+                create_swing_point(0, 1.1000, SwingType.HIGH),
+                create_swing_point(20, 1.0500, SwingType.LOW),
+                create_swing_point(40, 1.0691, SwingType.HIGH),  # 38.2% retracement
+                create_swing_point(60, 1.0191, SwingType.LOW),   # Extension
             ],
             'USDJPY': [  # USD/JPY rising (USD strength)
-                SwingPoint(0, 110.00, SwingType.LOW),
-                SwingPoint(20, 115.00, SwingType.HIGH),
-                SwingPoint(40, 113.09, SwingType.LOW),   # 38.2% retracement
-                SwingPoint(60, 118.09, SwingType.HIGH),  # Extension
+                create_swing_point(0, 110.00, SwingType.LOW),
+                create_swing_point(20, 115.00, SwingType.HIGH),
+                create_swing_point(40, 113.09, SwingType.LOW),   # 38.2% retracement
+                create_swing_point(60, 118.09, SwingType.HIGH),  # Extension
             ]
         }
         
