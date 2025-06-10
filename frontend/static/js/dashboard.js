@@ -16,6 +16,9 @@ class TradingDashboard {
     }
     
     init() {
+        // Initialize connection status to disconnected
+        this.updateConnectionStatus(false);
+        
         this.setupWebSocket();
         this.setupEventHandlers();
         this.setupChart();
@@ -205,15 +208,18 @@ class TradingDashboard {
     }
     
     updateConnectionStatus(connected) {
-        const connectedEl = document.getElementById('wsConnected');
-        const disconnectedEl = document.getElementById('wsDisconnected');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
         
         if (connected) {
-            connectedEl.classList.remove('d-none');
-            disconnectedEl.classList.add('d-none');
+            connectionStatus.className = 'connection-status connected';
+            statusDot.className = 'status-dot connected';
+            statusText.textContent = 'Connected';
         } else {
-            connectedEl.classList.add('d-none');
-            disconnectedEl.classList.remove('d-none');
+            connectionStatus.className = 'connection-status disconnected';
+            statusDot.className = 'status-dot disconnected';
+            statusText.textContent = 'Disconnected';
         }
     }
     
