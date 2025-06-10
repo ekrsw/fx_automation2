@@ -1,0 +1,29 @@
+============================================================
+MT5 CONNECTION TEST REPORT
+============================================================
+Timestamp: 2025-06-10T02:27:38.839029
+Platform: darwin
+
+SUMMARY:
+  Total Tests: 6
+  Successful: 6
+  Success Rate: 100.0%
+  Overall Status: PASS
+
+DETAILED RESULTS:
+  basic_connection: ✅ PASS
+  health_check: ✅ PASS
+  symbol_info: ✅ PASS
+  live_prices: ✅ PASS
+    Data Count: 2
+  historical_data: ✅ PASS
+    Data Points: 111
+  ohlc_data: ✅ PASS
+    Data Points: 10
+
+============================================================
+
+=== MT5 PACKAGE AVAILABILITY ===
+Platform: darwin
+MT5 Package Available: False
+Note: MT5 package not available: No module named 'MetaTrader5'

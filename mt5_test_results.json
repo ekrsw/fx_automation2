@@ -1,0 +1,117 @@
+{
+  "connection_tests": {
+    "timestamp": "2025-06-10T02:27:38.839029",
+    "platform": "darwin",
+    "tests": {
+      "basic_connection": {
+        "success": true,
+        "status": {
+          "connected": true,
+          "login": 123456,
+          "server": "MetaQuotes-Demo",
+          "last_heartbeat": "2025-06-10 11:27:38.991176",
+          "connection_retry_count": 0,
+          "error_message": null
+        }
+      },
+      "health_check": {
+        "success": true,
+        "details": "Health check completed"
+      },
+      "symbol_info": {
+        "success": true,
+        "symbols": {
+          "USDJPY": {
+            "name": "USDJPY",
+            "description": "USDJPY mock description",
+            "currency_base": "USD",
+            "currency_profit": "JPY",
+            "currency_margin": "JPY",
+            "digits": 5,
+            "trade_contract_size": 100000,
+            "trade_tick_value": 1e-05,
+            "point": 1e-05,
+            "trade_mode": 4,
+            "volume_min": 0.01,
+            "volume_max": 100.0,
+            "volume_step": 0.01
+          },
+          "EURJPY": {
+            "name": "EURJPY",
+            "description": "EURJPY mock description",
+            "currency_base": "EUR",
+            "currency_profit": "JPY",
+            "currency_margin": "JPY",
+            "digits": 5,
+            "trade_contract_size": 100000,
+            "trade_tick_value": 1e-05,
+            "point": 1e-05,
+            "trade_mode": 4,
+            "volume_min": 0.01,
+            "volume_max": 100.0,
+            "volume_step": 0.01
+          },
+          "GBPJPY": {
+            "name": "GBPJPY",
+            "description": "GBPJPY mock description",
+            "currency_base": "GBP",
+            "currency_profit": "JPY",
+            "currency_margin": "JPY",
+            "digits": 5,
+            "trade_contract_size": 100000,
+            "trade_tick_value": 1e-05,
+            "point": 1e-05,
+            "trade_mode": 4,
+            "volume_min": 0.01,
+            "volume_max": 100.0,
+            "volume_step": 0.01
+          }
+        }
+      },
+      "live_prices": {
+        "success": true,
+        "data_count": 2,
+        "symbols": [
+          "USDJPY",
+          "EURJPY"
+        ]
+      },
+      "historical_data": {
+        "success": true,
+        "data_points": 111,
+        "columns": [
+          "time",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume"
+        ]
+      },
+      "ohlc_data": {
+        "success": true,
+        "data_points": 10,
+        "columns": [
+          "time",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume"
+        ]
+      }
+    },
+    "summary": {
+      "total_tests": 6,
+      "successful_tests": 6,
+      "success_rate": 1.0,
+      "overall_status": "PASS"
+    }
+  },
+  "package_availability": {
+    "mt5_package_available": false,
+    "platform": "darwin",
+    "can_import": false,
+    "error": "MT5 package not available: No module named 'MetaTrader5'"
+  }
+}
