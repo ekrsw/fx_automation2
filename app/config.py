@@ -24,11 +24,21 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     
-    # MT5 Configuration (will be loaded from environment or config file)
-    mt5_login: Optional[int] = 123456  # Demo login for testing
-    mt5_password: Optional[str] = "demo_password"  # Demo password for testing
-    mt5_server: Optional[str] = "MetaQuotes-Demo"  # Demo server for testing
+    # MT5 Configuration (loaded from environment variables)
+    mt5_login: Optional[int] = None
+    mt5_password: Optional[str] = None
+    mt5_server: Optional[str] = None
     mt5_timeout: int = 30
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Load MT5 credentials from environment variables
+        if os.getenv('MT5_LOGIN'):
+            self.mt5_login = int(os.getenv('MT5_LOGIN'))
+        if os.getenv('MT5_PASSWORD'):
+            self.mt5_password = os.getenv('MT5_PASSWORD')
+        if os.getenv('MT5_SERVER'):
+            self.mt5_server = os.getenv('MT5_SERVER')
     
     # Trading Configuration
     trading_symbols: List[str] = ["USDJPY", "EURJPY", "GBPJPY"]

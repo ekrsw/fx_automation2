@@ -205,6 +205,50 @@ class MT5Connection:
             True if connected
         """
         return self.status.connected
+    
+    def get_terminal_info(self) -> Optional[Dict[str, Any]]:
+        """
+        Get MT5 terminal information
+        
+        Returns:
+            Terminal information dict or None
+        """
+        if not self.status.connected:
+            return None
+        
+        # Mock terminal info for development
+        return {
+            "name": "MetaTrader 5",
+            "build": "3390",
+            "path": "/path/to/terminal",
+            "company": "Demo Terminal",
+            "language": "English",
+            "connected": True
+        }
+    
+    def get_account_info(self) -> Optional[Dict[str, Any]]:
+        """
+        Get MT5 account information
+        
+        Returns:
+            Account information dict or None
+        """
+        if not self.status.connected:
+            return None
+        
+        # Mock account info for development
+        return {
+            "login": self.status.login,
+            "balance": 10000.00,
+            "currency": "USD",
+            "leverage": 100,
+            "equity": 10000.00,
+            "margin": 0.00,
+            "free_margin": 10000.00,
+            "company": "Demo Broker",
+            "name": "Demo Account",
+            "server": self.status.server
+        }
 
 
 # Global connection instance
