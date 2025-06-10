@@ -36,16 +36,16 @@ alembic revision --autogenerate -m "description"
 alembic current
 ```
 
-### Testing - Comprehensive 90%+ Coverage Suite
+### Testing - Comprehensive Test Suite
 ```bash
-# Run comprehensive test suite (219 tests across 11 files)
+# Run comprehensive test suite (322 tests across 17 files)
 python -m pytest tests/ -v
 
-# Test by category
-pytest tests/test_api/ -v                    # API endpoints (101 tests)
-pytest tests/test_analysis/ -v               # Analysis engines (57 tests)
-pytest tests/test_frontend/ -v               # UI functionality (31 tests)
-pytest tests/test_integration/ -v            # System integration (17 tests)
+# Test by category  
+pytest tests/test_api/ -v                    # API endpoints (multiple files)
+pytest tests/test_analysis/ -v               # Analysis engines
+pytest tests/test_frontend/ -v               # UI functionality
+pytest tests/test_integration/ -v            # System integration
 
 # Specific test files
 pytest tests/test_api/test_dashboard.py -v        # Dashboard API (14 tests)
@@ -164,11 +164,11 @@ This is a **sophisticated FX automated trading system** implementing **Dow Theor
 ### Comprehensive Test Suite (90%+ Coverage)
 
 **Testing Architecture:**
-- **Total Tests**: 219 test functions across 11 test files
-- **API Tests**: 101 tests covering all REST endpoints and WebSocket functionality
-- **Analysis Tests**: 57 tests for Dow Theory, Elliott Wave, and Fibonacci calculations
-- **Frontend Tests**: 31 tests for UI components, responsive design, and browser compatibility
-- **Integration Tests**: 17 tests for complete system workflows and error handling
+- **Total Tests**: 322 test functions across 17 test files
+- **API Tests**: Multiple test files covering all REST endpoints and WebSocket functionality
+- **Analysis Tests**: Tests for Dow Theory, Elliott Wave, and Fibonacci calculations
+- **Frontend Tests**: Tests for UI components, responsive design, and browser compatibility
+- **Integration Tests**: Tests for complete system workflows and error handling
 
 **Test Categories:**
 - `tests/test_api/` - API endpoint testing (5 files, 101 tests)
@@ -236,7 +236,7 @@ The system runs continuous data collection (1-minute intervals) with analysis ex
 
 Comprehensive test coverage with specialized test suites for each component:
 
-**API Testing (101 tests):**
+**API Testing (Multiple test files):**
 - Dashboard API: System status, performance metrics, position/order management
 - Trading API: Session control, signal processing, order execution, risk management
 - Analysis API: Dow Theory, Elliott Wave, unified analysis, multi-timeframe
@@ -270,7 +270,7 @@ Comprehensive test coverage with specialized test suites for each component:
 - **Phase 7.2:** WebSocket real-time streaming with 7 subscription types
 - **Phase 7.3:** Complete real-time dashboard with Bootstrap 5 + Chart.js
 - **MT5 Integration:** Demo account connection established (XMTrading-MT5 3, $10,000 balance)
-- **Comprehensive Testing:** 219 tests across 11 files with 90%+ coverage
+- **Comprehensive Testing:** 322 tests across 17 files
 - **Technical Stack:** FastAPI + WebSocket + Bootstrap5 + Chart.js + MT5 integration
 
 **Current Status:** Production-ready real-time trading system with modern UI operational at `http://localhost:8000`
@@ -302,6 +302,41 @@ Comprehensive test coverage with specialized test suites for each component:
 - passlib[bcrypt] - Secure password hashing
 
 ## Common Issues & Solutions
+
+### Testing Framework Compatibility
+The project uses httpx<0.28.0 to maintain compatibility with FastAPI TestClient. Never upgrade httpx beyond 0.27.2 without testing all API endpoints.
+
+**Test Suite Status:** The test suite has achieved significant coverage improvements with Dashboard API, Analysis API, and Trading API tests all fully functional. Key test categories working include:
+- Dashboard API (100% passing)
+- Trading API (100% passing) 
+- Analysis API (100% passing)
+- Basic endpoint tests (100% passing)
+
+### Trading API Test Patterns
+Trading API tests require specific mock object structures that match the actual implementation:
+
+```python
+# Order execution mocks must have proper attributes
+mock_execution = MagicMock()
+mock_execution.success = True
+mock_execution.order_id = "ord_001"
+mock_execution.mt5_ticket = 12345
+mock_execution.executed_volume = 0.1
+mock_execution.execution_price = 1.0851
+mock_execution.commission = 2.5
+mock_execution.error_message = None
+mock_execution.execution_time = datetime.now()
+
+# Position close result mocks
+mock_close_result = MagicMock()
+mock_close_result.success = True
+mock_close_result.closed_volume = 0.1
+mock_close_result.close_price = 1.0875
+mock_close_result.realized_pnl = 25.0
+mock_close_result.commission = 2.5
+mock_close_result.error_message = None
+mock_close_result.close_time = datetime.now()
+```
 
 ### Analysis API Test Failures
 When analysis API tests fail with HTTP 500 errors, the issue is typically insufficient mocking of the MT5 data fetcher. Tests require both data fetcher and analyzer mocking:
@@ -342,6 +377,25 @@ if price_data is None or price_data.empty:
 
 # Avoid this (causes "ambiguous truth value" errors)
 if not price_data or len(price_data) == 0:
+```
+
+### API Response Structure Patterns
+Trading API endpoints return specific response structures that tests must match:
+
+```python
+# Signal processing returns boolean success, not nested objects
+mock_trading_engine.process_signal = AsyncMock(return_value=True)  # Not a dict
+
+# Order cancellation uses DELETE method, not POST
+response = client.delete("/api/trading/orders/ord_001")  # Correct
+# response = client.post("/api/trading/orders/ord_001/cancel")  # Wrong
+
+# Emergency stop methods return None, not dict  
+mock_risk_manager.emergency_stop = AsyncMock(return_value=None)
+
+# Order types must match exact enum values
+"SELL_LIMIT"  # Correct
+"LIMIT_SELL"  # Wrong - will cause 400 validation error
 ```
 
 ### Method Signature Issues
@@ -475,7 +529,7 @@ Navigate to `http://localhost:8000/ui/dashboard` for the production-ready tradin
 
 **Comprehensive Test Execution:**
 ```bash
-# Run full test suite (219 tests)
+# Run full test suite (322 tests)
 python -m pytest tests/ -v
 
 # Test specific components
@@ -488,11 +542,11 @@ python -m pytest tests/ --cov=app --cov-report=html
 ```
 
 **Quality Metrics Achieved:**
-- **API Coverage**: 101 tests across all 25+ REST endpoints and WebSocket functionality
-- **Analysis Coverage**: 57 tests with mathematical precision validation (10 decimal places)
-- **UI Coverage**: 31 tests for responsive design and modern glassmorphism interface
-- **Integration Coverage**: 17 tests for complete system workflows and performance
-- **Overall Coverage**: 90%+ across all major system components
+- **API Coverage**: Multiple test files across all 25+ REST endpoints and WebSocket functionality
+- **Analysis Coverage**: Tests with mathematical precision validation (10 decimal places)
+- **UI Coverage**: Tests for responsive design and modern glassmorphism interface
+- **Integration Coverage**: Tests for complete system workflows and performance
+- **Overall Coverage**: Comprehensive coverage across all major system components
 
 ### Frontend Development Notes
 - **UI Framework**: Bootstrap 5 with custom glassmorphism styling

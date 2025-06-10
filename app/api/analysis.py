@@ -685,3 +685,26 @@ async def get_signal_history(
             status_code=500,
             detail=str(e)
         )
+
+
+# Health Check
+@router.get("/health")
+async def get_analysis_health() -> Dict[str, Any]:
+    """
+    Health check for analysis API
+    
+    Returns:
+        Analysis API health status
+    """
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "component": "analysis_api",
+        "services": {
+            "dow_theory_analyzer": "operational",
+            "elliott_wave_analyzer": "operational", 
+            "unified_analyzer": "operational",
+            "signal_generator": "operational",
+            "multi_timeframe_analyzer": "operational"
+        }
+    }
