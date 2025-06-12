@@ -36,9 +36,9 @@ alembic revision --autogenerate -m "description"
 alembic current
 ```
 
-### Testing - Comprehensive Test Suite (100% Success Rate)
+### Testing - Comprehensive Test Suite (100% Success Rate - Updated 2025-06-12)
 ```bash
-# Run comprehensive test suite (322 tests - ALL PASSING)
+# Run comprehensive test suite (322 tests - ALL PASSING - 100% Success Rate)
 python -m pytest tests/ -v
 
 # Test by category  
@@ -275,6 +275,11 @@ Comprehensive test coverage with specialized test suites for each component:
 
 **Current Status:** Production-ready real-time trading system with modern UI operational at `http://localhost:8000`
 
+**Latest Achievement (2025-06-12):** 
+- **Test Coverage**: 322/322 tests passing (100% success rate)
+- **Documentation**: Complete API specification and development roadmap created
+- **Quality Assurance**: All system components fully validated and operational
+
 ## Key Dependencies & Tech Stack
 
 **Core Framework:**
@@ -472,6 +477,15 @@ The complete system runs on `http://localhost:8000` with comprehensive access:
 - **System Status**: `http://localhost:8000/api/dashboard/status` - Real-time system health
 - **MT5 Status**: `http://localhost:8000/api/mt5/status` - MT5 connection and account info
 - **WebSocket Endpoint**: `ws://localhost:8000/ws` - Real-time data streaming
+
+## Documentation References
+
+**Comprehensive Documentation Available:**
+- `docs/api_endpoints_specification.md` - Complete API endpoint specifications (25+ REST endpoints + WebSocket)
+- `docs/development_roadmap.md` - Detailed development roadmap with phase completion status
+- `docs/fx_trading_system_guide.md` - System overview and user guide
+- `docs/mt5_integration_guide.md` - MetaTrader 5 integration documentation
+- `docs/system_detailed_design.md` - Detailed system architecture and design patterns
 
 ## Complete Trading System Usage
 
